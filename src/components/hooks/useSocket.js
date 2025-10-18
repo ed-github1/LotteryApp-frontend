@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import io from 'socket.io-client'
 import { useAuth } from '../../context/AuthContext' // Import useAuth to get userId
 
-const socket = io('http://localhost:3000')
+const socket = io(import.meta.env.VITE_API_URL)
 
 export const useSocket = () => {
   const { user } = useAuth() // Get userId from context

@@ -1,5 +1,4 @@
 [build]
-base = "lotteryapp-frontend"
 publish = "dist"
 command = "npm run build"
 
