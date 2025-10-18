@@ -1,0 +1,70 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Orbitron:wght@400..900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-title: 'Luckiest Guy', 'cursive';
+  --font-secondary: 'Nunito', 'sans-serif';
+  --font-number: 'Orbitron', 'sans-serif';
+}
+
+
+@layer utilities {
+  @keyframes pulse-light {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.7;
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+      box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .animate-pulse-light {
+    animation: pulse-light 2s infinite ease-in-out;
+  }
+}
+
+/* Custom react-toastify styling to match app theme */
+.Toastify__toast--success {
+  background: linear-gradient(to right, #10b981, #059669) !important;
+  border: 2px solid #047857 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(to right, #ef4444, #dc2626) !important;
+  border: 2px solid #b91c1c !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+  border: 2px solid #1d4ed8 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(to right, #f59e0b, #d97706) !important;
+  border: 2px solid #b45309 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.Toastify__close-button:hover {
+  color: white !important;
+}
