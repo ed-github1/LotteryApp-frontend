@@ -50,7 +50,7 @@ function Navbar() {
         {/* Right: login & CTA */}
         <div className="hidden md:flex items-center gap-2">
           <Link to="/login" className="text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/60 transition">Login</Link>
-          <Link to="/start-testing" className="ml-2 px-5 py-2 rounded-full bg-amber-400 hover:bg-orange-600 text-white font-bold shadow transition">Sign Up</Link>
+          <Link to="/register" className="ml-2 px-5 py-2 rounded-full bg-amber-400 hover:bg-orange-600 text-white font-bold shadow transition">Sign Up</Link>
         </div>
 
         {/* Hamburger for mobile */}

@@ -27,7 +27,6 @@ const BottomNav = () => {
   // Add admin tabs if user is admin
   if (isAdmin) {
     navTabs.push(
-      { icon: BiTrophy, label: 'Winners', to: '/dashboard/admin/winners' },
       { icon: CiSettings, label: 'Admin', to: '/dashboard/admin/orders' }
     );
   }
