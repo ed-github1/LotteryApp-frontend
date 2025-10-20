@@ -184,4 +184,4 @@ export const TicketProvider = ({ children }) => {
 export const useTicket = () => useContext(TicketContext);
 
 
-
+export { TicketContext };

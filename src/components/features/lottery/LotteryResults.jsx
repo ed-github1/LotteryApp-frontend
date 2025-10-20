@@ -75,13 +75,19 @@ const LotteryResults = ({ onConfettiChange }) => {
   // Helper to extract YYYY-MM-DD from various date formats
   const extractDateStr = (dateStr) => {
     if (!dateStr) return null;
-    // If format is "YYYY-MM-DD HH:mm:ss", just take the date part
     if (dateStr.includes(' ')) {
       return dateStr.split(' ')[0];
     }
-    // If ISO format, convert to date and extract
     return new Date(dateStr).toISOString().split('T')[0];
   };
+
+  // Filter winning numbers for today's draw only
+  const todayWinningNumbers = allNumbers.filter(w => extractDateStr(w.drawDate) === todayDateStr);
+  // Build winnerNumbersObj for highlight logic
+  const winnerNumbersObj = {};
+  todayWinningNumbers.forEach(w => {
+    winnerNumbersObj[w.country] = w.number;
+  });
   
   // If winner numbers exist, use their draw date
   if (allNumbers && allNumbers.length > 0 && allNumbers[0].drawDate) {
@@ -125,16 +131,23 @@ const LotteryResults = ({ onConfettiChange }) => {
 
   // computePrizeForTicket is now handled inside useTicketPrizes
 
-  // Create a simple winner detection function (unchanged logic)
-  // Updated winner detection: FR must be exact match
+  // Winner detection: ticket and winner number must have the same draw date, then match country and number
   const checkIfTicketIsWinner = (ticket) => {
     if (!allNumbers || allNumbers.length === 0) return false;
+    const ticketDrawDateStr = extractDateStr(ticket.orderDrawDate || ticket.drawDate);
     const selections = Array.isArray(ticket.selections)
       ? ticket.selections
       : Object.entries(ticket.selections || {}).map(([countryCode, number]) => ({ countryCode, number }));
-    // Only count as winner if BOTH country and number match
+    // Only count as winner if BOTH country, number, and draw date match
     return selections.some(sel => {
-      return allNumbers.some(winObj => winObj.country === sel.countryCode && String(winObj.number) === String(sel.number));
+      return allNumbers.some(winObj => {
+        const winnerDrawDateStr = extractDateStr(winObj.drawDate);
+        return (
+          winObj.country === sel.countryCode &&
+          String(winObj.number) === String(sel.number) &&
+          winnerDrawDateStr === ticketDrawDateStr
+        );
+      });
     });
   };
 
@@ -145,58 +158,22 @@ const LotteryResults = ({ onConfettiChange }) => {
     startDrawDate.setUTCHours(0,0,0,0);
   }
 
-  // Show tickets for the draw that matches the winner numbers date
-  // If no winner numbers, show all paid tickets (sorted by date descending)
+  // Show only tickets for today's draw
   let displayOrders = [];
-  const hasWinnerNumbers = allNumbers && allNumbers.length > 0;
-
-  
   if (myPaidOrders && myPaidOrders.length > 0) {
     displayOrders = myPaidOrders.filter(order => {
-      console.log('🔍 Checking order:', {
-        id: order._id,
-        paymentStatus: order.paymentStatus,
-        drawDate: order.drawDate,
-        tickets: order.tickets?.length || 0
-      });
-      
-      if (order.paymentStatus !== 'paid') {
-        console.log('❌ Rejected: payment not paid');
-        return false;
-      }
-      if (!order.drawDate) {
-        console.log('❌ Rejected: no drawDate');
-        return false;
-      }
-      
-
-      // Support both ISO and 'YYYY-MM-DD HH:mm:ss' formats
+      if (order.paymentStatus !== 'paid') return false;
+      if (!order.drawDate) return false;
       let orderDateObj;
       if (order.drawDate.includes('T')) {
         orderDateObj = new Date(order.drawDate);
       } else {
-        // Parse 'YYYY-MM-DD HH:mm:ss' as UTC
         const [datePart, timePart] = order.drawDate.split(' ');
         orderDateObj = new Date(datePart + 'T' + (timePart || '00:00:00') + 'Z');
       }
-      const orderDateStr = orderDateObj.toISOString().split('T')[0]; // YYYY-MM-DD
-      
-      // Try exact match first
-      let matches = orderDateStr === targetDateStr;
-      
-      // If no match, check if this is a late-night draw (19:00-23:59) that should match next day's winner numbers
-      // This handles the common case where tickets are created on day X at 19:00 but winner numbers are uploaded with day X+1
-      if (!matches && targetDateStr) {
-        const targetDate = new Date(targetDateStr + 'T00:00:00Z');
-        const dayBefore = new Date(targetDate);
-        dayBefore.setDate(dayBefore.getDate() - 1);
-        const dayBeforeStr = dayBefore.toISOString().split('T')[0];
-        // Check if order is from the day before AND has 19:00 (7 PM) draw time
-        if (orderDateStr === dayBeforeStr && order.drawDate.includes('19:00')) {
-          matches = true;
-        }
-      }
-      return matches;
+      const orderDateStr = orderDateObj.toISOString().split('T')[0];
+      // Only match today's date
+      return orderDateStr === todayDateStr;
     });
   }
   // Sort by drawDate descending
@@ -223,7 +200,7 @@ const LotteryResults = ({ onConfettiChange }) => {
 
 
   // Check if the user has at least one ticket with a match (for confetti)
-  const winnerNumbersArray = allNumbers.map(w => Number(w.number));
+  const winnerNumbersArray = todayWinningNumbers.map(w => Number(w.number));
   const hasWinner = displayOrders.some(order =>
     (order.tickets || []).some(ticket => {
       const selections = Array.isArray(ticket.selections)
@@ -307,8 +284,8 @@ const LotteryResults = ({ onConfettiChange }) => {
               {displayOrders && displayOrders.length > 0 ? (
                 <UserLotteryTickets
                   tickets={displayOrders.flatMap(order => order.tickets || [])}
-                  winningNumbers={allNumbers}
-                  winnerNumbersObj={grouped && grouped[targetDateStr] ? grouped[targetDateStr] : {}}
+                  winningNumbers={todayWinningNumbers}
+                  winnerNumbersObj={winnerNumbersObj}
                   prizeMap={ticketPrizeMap}
                 />
               ) : (
@@ -440,13 +417,9 @@ const LotteryResults = ({ onConfettiChange }) => {
       <TicketsList
         displayOrders={displayOrders}
         checkIfTicketIsWinner={checkIfTicketIsWinner}
-        winningNumbers={allNumbers.map(w => w.number)}
-        winnerNumbersObj={
-          currentResults && currentResults.length > 0
-            ? currentResults[0].winnerNumbers || {}
-            : {}
-        }
-        highlightActive={allNumbers.length >= 5}
+        winningNumbers={todayWinningNumbers.map(w => w.number)}
+        winnerNumbersObj={winnerNumbersObj}
+        highlightActive={todayWinningNumbers.length >= 5}
         prizeMap={ticketPrizeMap}
       />
     </div>

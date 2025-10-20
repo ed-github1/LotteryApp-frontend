@@ -71,7 +71,7 @@ const OrdersTable = ({ filteredOrders, selected, handleSelectAll, handleSelect, 
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-white/90 font-medium">
-                        {order.user?.email || order.user || 'N/A'}
+                        {order.user?.email || order.email || 'N/A'}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
