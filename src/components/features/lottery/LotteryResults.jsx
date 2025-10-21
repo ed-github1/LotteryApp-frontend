@@ -63,13 +63,12 @@ const LotteryResults = ({ onConfettiChange }) => {
 
   const weekRange = getDrawsWeekRange(nextDraws);
 
-  // Determine today's draw date (daily draws at 20:00 UTC)
-  const today = new Date();
-  const todayDateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+  // Force draw date to October 20, 2025 19:00:00 for testing
+  const todayDrawDateStr = '2025-10-20 19:00:00';
 
   // Show tickets for the draw that has winner numbers (or today's draw if no winner numbers yet)
   let currentDrawDate = null;
-  let targetDateStr = todayDateStr; // Default to today
+  let targetDateStr = todayDrawDateStr; // Default to today
   
 
   // Helper to extract YYYY-MM-DD from various date formats
@@ -81,8 +80,8 @@ const LotteryResults = ({ onConfettiChange }) => {
     return new Date(dateStr).toISOString().split('T')[0];
   };
 
-  // Filter winning numbers for today's draw only
-  const todayWinningNumbers = allNumbers.filter(w => extractDateStr(w.drawDate) === todayDateStr);
+  // Filter winning numbers for today's draw only (match full drawDate string)
+  const todayWinningNumbers = allNumbers.filter(w => w.drawDate === todayDrawDateStr);
   // Build winnerNumbersObj for highlight logic
   const winnerNumbersObj = {};
   todayWinningNumbers.forEach(w => {
@@ -99,8 +98,8 @@ const LotteryResults = ({ onConfettiChange }) => {
     targetDateStr = extractDateStr(currentResults[0].drawDate);
     currentDrawDate = new Date(targetDateStr + 'T00:00:00Z');
   } else {
-    // If no winner numbers yet, use today's date for ticket filtering
-    currentDrawDate = today;
+    // If no winner numbers yet, use forced draw date for ticket filtering
+    currentDrawDate = new Date('2025-10-20T19:00:00Z');
   }
 
   // Filter user wins for the current draw date
@@ -158,22 +157,37 @@ const LotteryResults = ({ onConfettiChange }) => {
     startDrawDate.setUTCHours(0,0,0,0);
   }
 
-  // Show only tickets for today's draw
+  // Debug: Log all myPaidOrders and todayDrawDateStr
+  console.log('🧾 myPaidOrders:', myPaidOrders);
+  console.log('📅 todayDrawDateStr:', todayDrawDateStr);
+  // Show only tickets for today's draw (match full drawDate string)
   let displayOrders = [];
   if (myPaidOrders && myPaidOrders.length > 0) {
     displayOrders = myPaidOrders.filter(order => {
       if (order.paymentStatus !== 'paid') return false;
       if (!order.drawDate) return false;
-      let orderDateObj;
-      if (order.drawDate.includes('T')) {
-        orderDateObj = new Date(order.drawDate);
-      } else {
-        const [datePart, timePart] = order.drawDate.split(' ');
-        orderDateObj = new Date(datePart + 'T' + (timePart || '00:00:00') + 'Z');
-      }
-      const orderDateStr = orderDateObj.toISOString().split('T')[0];
-      // Only match today's date
-      return orderDateStr === todayDateStr;
+      // Compare year, month, day, hour, minute
+      const getYMDHM = str => {
+        if (!str) return '';
+        let dateObj;
+        if (str.includes('T') || str.includes('Z')) {
+          dateObj = new Date(str);
+        } else {
+          // 'YYYY-MM-DD HH:mm:ss' or similar
+          const [datePart, timePart] = str.split(' ');
+          const [year, month, day] = datePart.split('-').map(Number);
+          const [hour, min] = (timePart ? timePart.split(':') : ['0','0']).map(Number);
+          dateObj = new Date(Date.UTC(year, month - 1, day, hour, min));
+        }
+        return `${dateObj.getUTCFullYear()}-${String(dateObj.getUTCMonth()+1).padStart(2,'0')}-${String(dateObj.getUTCDate()).padStart(2,'0')} ${String(dateObj.getUTCHours()).padStart(2,'0')}:${String(dateObj.getUTCMinutes()).padStart(2,'0')}`;
+      };
+  const orderYMDHM = getYMDHM(order.drawDate);
+  const todayYMDHM = getYMDHM(todayDrawDateStr);
+  console.log('🔎 Raw order.drawDate:', order.drawDate);
+  console.log('🔎 Raw todayDrawDateStr:', todayDrawDateStr);
+  console.log('🔎 Computed orderYMDHM:', orderYMDHM);
+  console.log('🔎 Computed todayYMDHM:', todayYMDHM);
+  return orderYMDHM === todayYMDHM;
     });
   }
   // Sort by drawDate descending
@@ -256,12 +270,19 @@ const LotteryResults = ({ onConfettiChange }) => {
             
             {/* Draw Date Display */}
             <div className="mb-6">
-              <span className="text-sm text-white/70 bg-white/10 px-4 py-2 rounded-full inline-block">
-                Today's Draw: {today.toLocaleDateString()}
-              </span>
-              <p className="text-xs text-white/60 mt-3">
-                Daily draw at 8:00 PM UTC (20:00 UTC) • Results will be available after the draw
-              </p>
+              {(() => {
+                const today = new Date();
+                return (
+                  <>
+                    <span className="text-sm text-white/70 bg-white/10 px-4 py-2 rounded-full inline-block">
+                      Today's Draw: {today.toLocaleDateString()}
+                    </span>
+                    <p className="text-xs text-white/60 mt-3">
+                      Daily draw at 8:00 PM UTC (20:00 UTC) • Results will be available after the draw
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           </div>
 
@@ -342,12 +363,19 @@ const LotteryResults = ({ onConfettiChange }) => {
           )}
           {/* Draw Date Display */}
           <div className="mb-6">
-            <span className="text-sm text-white/70 bg-white/10 px-4 py-2 rounded-full inline-block">
-              Today's Draw: {today.toLocaleDateString()}
-            </span>
-            <p className="text-xs text-white/60 mt-3">
-              Daily draw at 7:00 PM  • Results announced
-            </p>
+            {(() => {
+              const today = new Date();
+              return (
+                <>
+                  <span className="text-sm text-white/70 bg-white/10 px-4 py-2 rounded-full inline-block">
+                    Today's Draw: {today.toLocaleDateString()}
+                  </span>
+                  <p className="text-xs text-white/60 mt-3">
+                    Daily draw at 7:00 PM  • Results announced
+                  </p>
+                </>
+              );
+            })()}
           </div>
         </div>
 
@@ -390,11 +418,17 @@ const LotteryResults = ({ onConfettiChange }) => {
       </div>
     {/* Inline Prize Pool and Total Earnings Container */}
           <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4 sm:gap-6 my-8 max-w-4xl mx-auto">
-            {currentDrawDate && (
-              <div className="flex-1 min-w-0">
-                <PrizePoolBanner drawDate={latestDrawDateIso} />
-              </div>
-            )}
+            <div className="flex-1 min-w-0">
+              {/* Always use today's draw date at 19:00 UTC for prize pool */}
+              {(() => {
+                const today = new Date();
+                const year = today.getUTCFullYear();
+                const month = today.getUTCMonth();
+                const day = today.getUTCDate();
+                const todayDrawDate = new Date(Date.UTC(year, month, day, 19, 0, 0, 0)).toISOString();
+                return <PrizePoolBanner drawDate={todayDrawDate} />;
+              })()}
+            </div>
             {(totalFromTickets > 0 || totalEarnings > 0) && (
               <div className="flex-1 min-w-0">
                 <div className="h-full flex items-center justify-center bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-2xl shadow-2xl border-2 border-green-400/30 p-4 sm:p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
