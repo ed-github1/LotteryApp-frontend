@@ -30,7 +30,7 @@ const Lottery = () => {
   } = useLotteryLogic();
 
   const [showTutorialModal, setShowTutorialModal] = useState(() => {
-    const hasSeenTutorial = sessionStorage.getItem('hasSeenLotteryTutorial');
+    const hasSeenTutorial = localStorage.getItem('hasSeenLotteryTutorial');
     return !hasSeenTutorial;
   });
 
@@ -39,7 +39,7 @@ const Lottery = () => {
   // Start inline guide after closing intro modal
   const handleCloseTutorial = () => {
     setShowTutorialModal(false);
-    sessionStorage.setItem('hasSeenLotteryTutorial', 'true');
+    localStorage.setItem('hasSeenLotteryTutorial', 'true');
     setShowInlineGuide(true);
   };
 
@@ -54,12 +54,12 @@ const Lottery = () => {
       <SuperLottoAvatarModal
         open={showTutorialModal}
         onClose={handleCloseTutorial}
-        title="Welcome to SuperLotto!"
+        title="Bienvenido A World SuperLotto!"
         lines={[
-          'Select 7 countries from the grid',
-          'Choose your lucky numbers for each country',
-          'Add your ticket to the cart',
-          'Complete your purchase and await the draw!'
+          'Seleccciona 8 numeros (países) del recuadro de abajo ',
+          'Cada Pais tiene un Rango de numeros',
+          'Agrega tu ticket a tu orden',
+          'Completa tu compra y espera al sorteo!'
         ]}
       />
 
@@ -91,12 +91,10 @@ const Lottery = () => {
                   ✕
                 </button>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold border-2 border-white/50">
-                    1
-                  </div>
+
                   <div>
-                    <h3 className="text-white font-bold text-lg">👇 Select 7 Countries</h3>
-                    <p className="text-white/90 text-sm">Click on country flags below to start building your ticket</p>
+                    <h3 className="text-white font-bold text-lg">👇 Selecciona tus numeros de los 8 Paises</h3>
+                    <p className="text-white/90 text-sm">Haz click en las banderas  para empezar a seleccionar tus numeros de boleto</p>
                   </div>
                 </div>
               </motion.div>
@@ -117,12 +115,10 @@ const Lottery = () => {
                   ✕
                 </button>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold border-2 border-white/50">
-                    2
-                  </div>
+
                   <div>
-                    <h3 className="text-white font-bold text-lg">🎯 Keep Going! ({selectedCount}/7)</h3>
-                    <p className="text-white/90 text-sm">Select {7 - selectedCount} more {7 - selectedCount === 1 ? 'country' : 'countries'}, then choose your lucky numbers</p>
+                    <h3 className="text-white font-bold text-lg">🎯 Continua Asi! ({selectedCount}/8)</h3>
+                    <p className="text-white/90 text-sm">Selecciona {8 - selectedCount}  {8 - selectedCount === 1 ? 'numero' : 'numeros'} mas, de cada pais  </p>
                   </div>
                 </div>
               </motion.div>
@@ -170,12 +166,10 @@ const Lottery = () => {
                   ✕
                 </button>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold border-2 border-white/50">
-                    3
-                  </div>
+
                   <div>
-                    <h3 className="text-white font-bold text-lg">✅ Perfect! Now Add Your Ticket</h3>
-                    <p className="text-white/90 text-sm">Click the "Add Ticket" button below to save your selections</p>
+                    <h3 className="text-white font-bold text-lg">✅ Perfecto! ahora agreguemos tu boleto a tu orden</h3>
+                    <p className="text-white/90 text-sm">Haz Click en el boton "Add Ticket" para guardar tu boleto </p>
                   </div>
                 </div>
               </motion.div>
@@ -189,7 +183,7 @@ const Lottery = () => {
           >
             Quick Pick (Random)
           </ActionButton>
-          
+
           <ActionButton
             onClick={handleClearSelections}
             className="w-full py-4 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 border-blue-500/20"
@@ -202,19 +196,18 @@ const Lottery = () => {
           <div id="add-ticket-button">
             <ActionButton
               onClick={handleSaveTicket}
-              className={`w-full h-16 py-4 font-bold text-xl shadow-2xl hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 ${
-                !isSaveDisabled
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 border-blue-500/20'
-                  : 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-400 border-gray-500/20 cursor-not-allowed'
-              }`}
+              className={`w-full h-16 py-4 font-bold text-xl shadow-2xl hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 ${!isSaveDisabled
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 border-blue-500/20'
+                : 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-400 border-gray-500/20 cursor-not-allowed'
+                }`}
               icon="🛒"
               disabled={isSaveDisabled}
             >
               {tickets.length >= MAX_TICKETS
                 ? `Max ${MAX_TICKETS} Tickets Reached`
                 : selectedCount < 7
-                ? `Select ${7 - selectedCount} More Countries`
-                : `Add Ticket - $${totalPrice} (${selectedCount}/8)`}
+                  ? `Select ${7 - selectedCount} More Countries`
+                  : `Add Ticket - $${totalPrice} (${selectedCount}/8)`}
             </ActionButton>
           </div>
 
@@ -236,12 +229,10 @@ const Lottery = () => {
                       ✕
                     </button>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold border-2 border-white/50">
-                        4
-                      </div>
+
                       <div>
-                        <h3 className="text-white font-bold text-lg">🎟️ Ready to Checkout!</h3>
-                        <p className="text-white/90 text-sm">Click "View Tickets" to review and complete your purchase</p>
+                        <h3 className="text-white font-bold text-lg">🎟️ Listos Para el siguiente paso !</h3>
+                        <p className="text-white/90 text-sm">Puedes harcer Click en el boton "View Tickets" para pasar al siguiente paso y continuar con tu compra o puedes repetir el proceso para agregar mas boletos y tener mmas posibilades de ganar! </p>
                       </div>
                     </div>
                   </motion.div>
@@ -258,7 +249,7 @@ const Lottery = () => {
                 <span className="text-2xl">🎟️</span>
                 <span>View Tickets ({tickets.length})</span>
               </button>
-              
+
               <button
                 id="view-tickets-button-mobile"
                 className="flex md:hidden w-full max-w-7xl mx-auto px-4 mt-4 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-[#232946] font-bold shadow-lg items-center justify-center gap-3 py-4 text-lg"

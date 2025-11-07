@@ -90,6 +90,10 @@ export const AuthProvider = ({ children }) => {
     setMessage('');
     window.localStorage.removeItem('loggedLotteryappUser');
     window.localStorage.removeItem('loggedLotteryappToken');
+    // Clear tutorial guide flags
+    window.localStorage.removeItem('hasSeenLotteryTutorial');
+    window.localStorage.removeItem('hasSeenTicketSummaryGuide');
+    window.localStorage.removeItem('hasSeenPaymentGuide');
     setToken(null);
     // Only navigate if not already on login page
     if (window.location.pathname !== '/login') {

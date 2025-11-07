@@ -3,7 +3,7 @@ import { FaClock } from 'react-icons/fa';
 const PaymentSummaryHeader = ({ totalAmount, timeLeft }) => {
     return (
         <motion.div
-            className="my-2 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"
+            className="mt-6 mb-4 mx-auto p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 w-full max-w-7xl px-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
         >

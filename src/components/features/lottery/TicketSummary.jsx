@@ -50,7 +50,7 @@ const TicketSummary = ({ tickets = [], handleDeleteTicket, onReview, winningTick
           disabled={tickets.length === 0}
           onClick={onReview}
         >
-          Continue to Receipt ({tickets.length} ticket{tickets.length !== 1 ? 's' : ''})
+          Continue to Next Step ({tickets.length} ticket{tickets.length !== 1 ? 's' : ''})
         </ActionButton>
       </div>
     </>

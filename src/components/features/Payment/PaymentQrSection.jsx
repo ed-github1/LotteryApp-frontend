@@ -23,9 +23,9 @@ const PaymentQRSection = ({
             >
                 Complete Your Payment
             </motion.h2>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center w-full">
                 <motion.div
-                    className="mb-6 p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 max-w-md"
+                    className="mb-6 p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 w-full max-w-md"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -59,6 +59,25 @@ const PaymentQRSection = ({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
                 >
+                    {/* Inline instruction for TKID */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                        className="mb-4 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 backdrop-blur-sm rounded-xl p-3 border border-yellow-500/30"
+                    >
+                        <div className="flex items-start gap-2">
+                            <span className="text-yellow-400 text-lg flex-shrink-0 mt-0.5">💡</span>
+                            <div>
+                                <p className="text-yellow-200 text-sm font-semibold mb-1">Instrucción Importante</p>
+                                <p className="text-yellow-100/90 text-xs">
+                                    Después de completar el pago en tu billetera, copia el ID de transacción (TXID) y pégalo en el campo de abajo.
+                                    ¡Recuerda que estamos probando la interfaz así que puedes agregar cualquier número que quieras para pasar al siguiente paso!
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
+
                     <label className="block text-white font-semibold mb-2">
                         Transaction ID (TXID)
                     </label>
@@ -88,7 +107,7 @@ const PaymentQRSection = ({
                 </motion.div>
                 {error && (
                     <motion.div
-                        className="text-red-400 text-sm mt-4 bg-red-500/20 px-4 py-2 rounded-lg border border-red-500/30"
+                        className="text-red-400 text-sm mt-4 bg-red-500/20 px-4 py-2 rounded-lg border border-red-500/30 w-full max-w-md"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                     >

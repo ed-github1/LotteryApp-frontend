@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import Stepper from "../../common/Stepper";
 import ActionButton from '../../common/ActionButtons'
 import PaymentMethodSelector from "../../features/Payment/PaymentMethodSelector";
@@ -49,12 +50,79 @@ const PaymentPage = () => {
     navigate
   } = usePayment();
 
+  const [showInlineGuide, setShowInlineGuide] = useState(() => {
+    const hasSeenGuide = localStorage.getItem('hasSeenPaymentGuide');
+    return !hasSeenGuide;
+  });
+
+  const handleDismissGuide = () => {
+    setShowInlineGuide(false);
+    localStorage.setItem('hasSeenPaymentGuide', 'true');
+  };
+
   return (
     <>
       {selected && (
         <PaymentSummaryHeader totalAmount={totalAmount} timeLeft={timeLeft} />
       )}
       <Stepper currentStep={3} />
+
+      {/* Inline Guides */}
+      <div className="w-full max-w-7xl mx-auto px-4 mt-4">
+        <AnimatePresence>
+          {/* Guide: Select Payment Method */}
+          {showInlineGuide && !selected && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mb-4"
+            >
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 shadow-lg border-2 border-blue-300 relative">
+                <button
+                  onClick={handleDismissGuide}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-sm"
+                >
+                  ✕
+                </button>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h3 className="text-white font-bold text-lg">💳 Selecciona Tu Método de Pago</h3>
+                    <p className="text-white/90 text-sm">Elige entre cualquier provedor de cryptocurrency para completar tu compra (esto es una simulacion estamos probando la interfaz) puedes hacer click en cualquier recuadro que aparece abajo </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Guide: Complete Payment */}
+          {showInlineGuide && selected && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mb-4"
+            >
+              <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-4 shadow-lg border-2 border-purple-300 relative">
+                <button
+                  onClick={handleDismissGuide}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-sm"
+                >
+                  ✕
+                </button>
+                <div className="flex items-center gap-3">
+
+                  <div>
+                    <h3 className="text-white font-bold text-lg">📱 Escanea y Paga</h3>
+                    <p className="text-white/90 text-sm">Escanea el código QR, completa el pago e ingresa tu ID de transacción</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <div className="min-h-screen flex flex-col items-center justify-center pb-30">
         <motion.div
           className="w-full max-w-7xl mx-auto pb-10 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20"
@@ -86,7 +154,7 @@ const PaymentPage = () => {
         </motion.div>
         {selected && (
           <motion.div
-            className="flex flex-col gap-4 w-full max-w-2xl mt-8"
+            className="flex flex-col gap-4 w-full max-w-md mt-8 mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
