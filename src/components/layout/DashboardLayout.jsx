@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useSocket } from '../../context/SocketContext'
 import { motion } from 'framer-motion'
 import SuperballWinnerNotification from '../features/superball/SuperballWinnerNotification'
+import SuperLottoAvatarModal from '../common/SuperLottoAvatarModal'
 
 const DashboardLayout = () => {
   const location = useLocation()
@@ -15,6 +16,22 @@ const DashboardLayout = () => {
   const { user } = useAuth()
   const socket = useSocket()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false)
+
+  // Show welcome modal once per login session
+  useEffect(() => {
+    if (user) {
+      const hasSeenWelcomeThisSession = sessionStorage.getItem('hasSeenWelcomeModal');
+      if (!hasSeenWelcomeThisSession) {
+        setShowWelcomeModal(true);
+        sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+      }
+    }
+  }, [user]);
+
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false);
+  };
 
   // disable browser auto-restoration so we control scroll
   useEffect(() => {
@@ -126,6 +143,19 @@ const DashboardLayout = () => {
       className={`min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 bg-fixed overflow-x-hidden flex flex-col lg:grid ${sidebarCollapsed ? 'lg:grid-cols-[64px_1fr]' : 'lg:grid-cols-[256px_1fr]'}`}
       style={{ transition: 'grid-template-columns 0.3s ease-in-out' }}
     >
+      {/* Welcome Modal - Shows once per login session */}
+      <SuperLottoAvatarModal
+        open={showWelcomeModal}
+        onClose={handleCloseWelcomeModal}
+        title="Welcome to SuperLotto!"
+        lines={[
+          'Select your lucky numbers from the grid',
+          'Add multiple tickets for better chances',
+          'Complete your purchase and await the draw',
+          'Check results and claim your winnings!'
+        ]}
+      />
+      
       {/* SuperBall Winner Notification */}
       <SuperballWinnerNotification />
       

@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { registerUser, logIn } from '../services/authService'
+import { setupAxiosInterceptors } from '../services/axiosInterceptors'
 
 
 
@@ -24,23 +26,27 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => window.localStorage.getItem('loggedLotteryappToken') || null)
   const [loading, setLoading] = useState(false)
 
-
   useEffect(() => {
     const storedUser = localStorage.getItem('loggedLotteryappUser');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      // Refresh user data to ensure full object (including email)
-      if (parsedUser._id) {
-        refreshUser(); // Call refreshUser to update with latest data
-      }
-    }
-    // Sync token from localStorage on mount
     const storedToken = localStorage.getItem('loggedLotteryappToken');
     if (storedToken) {
       setToken(storedToken);
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } else {
+      // No token: clear user and redirect to login
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('loggedLotteryappUser');
+      localStorage.removeItem('loggedLotteryappToken');
+      if (window.location.pathname !== '/login') {
+        navigate('/login', { replace: true });
+      }
     }
-  }, []); // Note: refreshUser is not in deps to avoid loops
+    // Pass logout to interceptor so it can clear user state on 401
+    setupAxiosInterceptors(logout, checkTokenExpiration);
+  }, []);
 
   const createUser = async (data) => {
     try {
@@ -65,60 +71,48 @@ export const AuthProvider = ({ children }) => {
       setAuthErrors([])
       const res = await logIn(credentials)
       setUser(res.user)
-      window.localStorage.setItem(
-        'loggedLotteryappUser',
-        JSON.stringify(res.user)
-      )
-      // Store token separately if user refresh window 
+      window.localStorage.setItem('loggedLotteryappUser', JSON.stringify(res.user))
       if (res.token) {
-        window.localStorage.setItem('loggedLotteryappToken', res.token);
-        setToken(res.token);
+        window.localStorage.setItem('loggedLotteryappToken', res.token)
+        setToken(res.token)
       }
-      setAuthErrors([])
     } catch (error) {
-      const backendMsg =
-        error.response?.data?.error ||
-        error.message ||
-        'Login failed. Please try again.'
-      setAuthErrors([backendMsg])
+      setAuthErrors([error.message || 'Login failed. Please try again.'])
     } finally {
       setLoading(false)
     }
   }
 
+  const navigate = useNavigate();
   const logout = () => {
-    setUser(null)
-    setAuthErrors([])
-    setMessage('')
-    window.localStorage.removeItem('loggedLotteryappUser')
-    window.localStorage.removeItem('loggedLotteryappToken')
-    setToken(null)
-  }
-
-  const refreshUser = async () => {
-    if (!user || !token) return;
-    try {
-      const response = await fetch(`/api/users/${user._id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Failed to fetch user');
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-    } catch (err) {
-      console.error('Error refreshing user:', err);
+    setUser(null);
+    setAuthErrors([]);
+    setMessage('');
+    window.localStorage.removeItem('loggedLotteryappUser');
+    window.localStorage.removeItem('loggedLotteryappToken');
+    setToken(null);
+    // Only navigate if not already on login page
+    if (window.location.pathname !== '/login') {
+      navigate('/login', { replace: true });
     }
   };
 
-  useEffect(() => {
-    if (authErrors.length > 0) {
-      const timer = setTimeout(() => {
-        setAuthErrors([])
-      }, 5000)
-      return () => clearTimeout(timer)
+  // Check token expiration by decoding JWT 'exp' claim
+  const checkTokenExpiration = () => {
+    try {
+      const t = window.localStorage.getItem('loggedLotteryappToken')
+      if (!t) return true
+      const parts = t.split('.')
+      if (parts.length < 2) return true
+      const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+      if (!payload.exp) return true
+      const now = Math.floor(Date.now() / 1000)
+      return payload.exp <= now
+    } catch (err) {
+      console.error('Error checking token expiration', err)
+      return true
     }
-  }, [authErrors])
+  }
 
   return (
     <AuthContext.Provider
@@ -130,8 +124,7 @@ export const AuthProvider = ({ children }) => {
         authErrors,
         message,
         token,
-        loading,
-        refreshUser
+        loading
       }}
     >
       {children}

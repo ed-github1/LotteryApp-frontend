@@ -356,13 +356,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true)
     try {
-      // Start the login process
       await login(data)
-      // Only reset if login is successful (user is set)
-      // Navigation is handled in useEffect
-    } catch (error) {
-      setIsSubmitting(false)
-      // Do not reset form on error
     } finally {
       setIsSubmitting(false)
     }
@@ -408,14 +402,14 @@ const LoginForm = () => {
             </div>
 
             {/* Form Fields */}
-            <EmailInput register={register} errors={errors} loading={loading} />
-            <PasswordInput
-              register={register}
-              errors={errors}
-              loading={loading}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
+              <EmailInput register={register} errors={errors} loading={loading} />
+              <PasswordInput
+                register={register}
+                errors={errors}
+                loading={loading}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+              />
 
             {/* Error Display */}
             <AuthErrors authErrors={authErrors} />

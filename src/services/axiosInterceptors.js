@@ -1,57 +1,60 @@
 import axios from 'axios'
 
-// Create axios interceptor to handle token expiration
+// Create axios interceptor to handle token and auth headers
 export const setupAxiosInterceptors = (logout, checkTokenExpiration) => {
-  // Request interceptor to add token to headers
   axios.interceptors.request.use(
     (config) => {
-      // Check if token is expired before making request
-      if (checkTokenExpiration && checkTokenExpiration()) {
-        // Token expired, reject the request
-        return Promise.reject(new Error('Token expired'))
-      }
-
-      const storedUser = localStorage.getItem('loggedLotteryappUser')
+      const storedUser = localStorage.getItem('loggedLotteryappUser');
       if (storedUser) {
         try {
-          const userData = JSON.parse(storedUser)
+          const userData = JSON.parse(storedUser);
           if (userData.token) {
-            config.headers.Authorization = `Bearer ${userData.token}`
+            config.headers.Authorization = `Bearer ${userData.token}`;
           }
         } catch (error) {
-          console.error('Error parsing stored user data:', error)
+          console.error('Error parsing stored user data:', error);
         }
       }
-      return config
-    },
-    (error) => {
-      return Promise.reject(error)
-    }
-  )
 
-  // Response interceptor to handle token expiration responses
+      // Diagnostic logging for debugging API call blocking
+      console.log('[AXIOS INTERCEPTOR] config.url:', config.url, 'config.method:', config.method);
+
+      // Allow login requests even if token is missing/expired
+      const isLoginRoute = config.url && config.url.includes('/login');
+      if (isLoginRoute) {
+        console.log('[AXIOS INTERCEPTOR] Allowing login route:', config.url);
+        return config;
+      }
+
+      // If a checkTokenExpiration function was provided, use it to
+      // proactively detect expired or missing tokens and log the user out
+      try {
+        if (typeof checkTokenExpiration === 'function' && checkTokenExpiration()) {
+          if (typeof logout === 'function') {
+            logout();
+          }
+          // Reject the request so it doesn't go out with an invalid token
+          return Promise.reject(new axios.Cancel('Token expired'));
+        }
+      } catch (err) {
+        // On any error while checking token, log out defensively
+        if (typeof logout === 'function') logout();
+        return Promise.reject(err);
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  // Response interceptor to handle token expiration or missing token
   axios.interceptors.response.use(
-    (response) => {
-      return response
-    },
+    (response) => response,
     (error) => {
-      // Check for token expiration status codes
-      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-        const errorMessage = error.response.data?.message || error.response.data?.error || ''
-        
-        // Check if the error is related to token expiration
-        if (
-          errorMessage.toLowerCase().includes('expired') ||
-          errorMessage.toLowerCase().includes('invalid token') ||
-          errorMessage.toLowerCase().includes('unauthorized')
-        ) {
-          console.log('Token expired from API response, logging out user')
-          logout()
-        }
+      if (error.response && error.response.status === 401) {
+        // Let the provided logout function handle clearing state/storage
+        if (typeof logout === 'function') logout();
       }
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
-  )
+  );
 }
-
-export default setupAxiosInterceptors

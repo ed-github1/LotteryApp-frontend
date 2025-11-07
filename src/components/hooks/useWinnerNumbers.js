@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getCurrentWinners } from '../services/winnerService'
+import { getCurrentWinners } from '../../services/winnerService'
 
 export default function useWinnerNumbers() {
   const [loading, setLoading] = useState(true)

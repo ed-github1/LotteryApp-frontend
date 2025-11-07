@@ -56,7 +56,30 @@ const UserLotteryTickets = ({ tickets, winningNumbers, winnerNumbersObj, prizeMa
               number,
             }))
           : [];
-        
+
+
+        // Detailed debug logging for winnerNumbersObj and selections
+        console.log(`🎫 Processing ticket #${idx} id: ${ticket.id || ticket._id} selections:`, selections);
+        console.log('🏆 winnerNumbersObj:', winnerNumbersObj);
+        if (winnerNumbersObj && selections) {
+          // Log each selection and compare to winner numbers
+          selections.forEach((sel, selIdx) => {
+            const country = sel.countryCode || sel.country;
+            const number = sel.number;
+            let match = false;
+            if (country === 'FR') {
+              match = winnerNumbersObj.FR && Number(number) === Number(winnerNumbersObj.FR);
+              console.log(`  [${selIdx}] FR: ticket number ${number} vs winner ${winnerNumbersObj.FR} => match: ${match}`);
+            } else {
+              const nonFRWinners = Object.entries(winnerNumbersObj)
+                .filter(([key]) => key !== 'FR')
+                .map(([, val]) => Number(val));
+              match = nonFRWinners.includes(Number(number));
+              console.log(`  [${selIdx}] ${country}: ticket number ${number} vs non-FR winners ${nonFRWinners} => match: ${match}`);
+            }
+          });
+        }
+
         const displayPrice = ticket.price > 0 ? Number(ticket.price).toFixed(2) : 'N/A';
         const ticketNumber = ticket.ticketNumber || ticket._id;
         const ticketId = ticket.id || ticket._id;
