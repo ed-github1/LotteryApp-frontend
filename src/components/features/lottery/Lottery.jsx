@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CountriesGrid from './CountriesGrid';
 import SelectedCountryInfo from './SelectedCountryInfo';
 import ActionButton from '../../common/ActionButtons';
@@ -10,6 +11,7 @@ import SuperLottoAvatarModal from '../../common/SuperLottoAvatarModal';
 
 const Lottery = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const {
     countryConfigs,
     tickets,
@@ -54,12 +56,12 @@ const Lottery = () => {
       <SuperLottoAvatarModal
         open={showTutorialModal}
         onClose={handleCloseTutorial}
-        title="Bienvenido A World SuperLotto!"
+        title={t('lottery.welcome')}
         lines={[
-          'Seleccciona 8 numeros (países) del recuadro de abajo ',
-          'Cada Pais tiene un Rango de numeros',
-          'Agrega tu ticket a tu orden',
-          'Completa tu compra y espera al sorteo!'
+          t('lottery.tutorial.line1'),
+          t('lottery.tutorial.line2'),
+          t('lottery.tutorial.line3'),
+          t('lottery.tutorial.line4')
         ]}
       />
 
@@ -93,8 +95,8 @@ const Lottery = () => {
                 <div className="flex items-center gap-3">
 
                   <div>
-                    <h3 className="text-white font-bold text-lg">👇 Selecciona tus numeros de los 8 Paises</h3>
-                    <p className="text-white/90 text-sm">Haz click en las banderas  para empezar a seleccionar tus numeros de boleto</p>
+                    <h3 className="text-white font-bold text-lg">{t('lottery.guide.step1.title')}</h3>
+                    <p className="text-white/90 text-sm">{t('lottery.guide.step1.desc')}</p>
                   </div>
                 </div>
               </motion.div>
@@ -117,8 +119,8 @@ const Lottery = () => {
                 <div className="flex items-center gap-3">
 
                   <div>
-                    <h3 className="text-white font-bold text-lg">🎯 Continua Asi! ({selectedCount}/8)</h3>
-                    <p className="text-white/90 text-sm">Selecciona {8 - selectedCount}  {8 - selectedCount === 1 ? 'numero' : 'numeros'} mas, de cada pais  </p>
+                    <h3 className="text-white font-bold text-lg">{t('lottery.guide.step2.title')} ({selectedCount}/8)</h3>
+                    <p className="text-white/90 text-sm">{t('lottery.guide.step2.desc')}</p>
                   </div>
                 </div>
               </motion.div>
@@ -168,8 +170,8 @@ const Lottery = () => {
                 <div className="flex items-center gap-3">
 
                   <div>
-                    <h3 className="text-white font-bold text-lg">✅ Perfecto! ahora agreguemos tu boleto a tu orden</h3>
-                    <p className="text-white/90 text-sm">Haz Click en el boton "Add Ticket" para guardar tu boleto </p>
+                    <h3 className="text-white font-bold text-lg">{t('lottery.guide.step3.title')}</h3>
+                    <p className="text-white/90 text-sm">{t('lottery.guide.step3.desc')}</p>
                   </div>
                 </div>
               </motion.div>
@@ -181,7 +183,7 @@ const Lottery = () => {
             className="w-full py-4 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02] transition-all duration-200 rounded-2xl border-2 border-blue-500/20"
             icon="🎲"
           >
-            Quick Pick (Random)
+            {t('lottery.randomizeAll')}
           </ActionButton>
 
           <ActionButton
@@ -190,7 +192,7 @@ const Lottery = () => {
             icon="🗑️"
             disabled={selectedCount === 0}
           >
-            Clear Selections
+            {t('lottery.clearSelections')}
           </ActionButton>
 
           <div id="add-ticket-button">
@@ -231,8 +233,8 @@ const Lottery = () => {
                     <div className="flex items-center gap-3">
 
                       <div>
-                        <h3 className="text-white font-bold text-lg">🎟️ Listos Para el siguiente paso !</h3>
-                        <p className="text-white/90 text-sm">Puedes harcer Click en el boton "View Tickets" para pasar al siguiente paso y continuar con tu compra o puedes repetir el proceso para agregar mas boletos y tener mmas posibilades de ganar! </p>
+                        <h3 className="text-white font-bold text-lg">{t('lottery.guide.step4.title')}</h3>
+                        <p className="text-white/90 text-sm">{t('lottery.guide.step4.desc')}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -246,8 +248,8 @@ const Lottery = () => {
                 aria-label="View Ticket Summary"
                 style={{ boxShadow: '0 8px 32px 0 rgba(255,215,0,0.25)' }}
               >
-                <span className="text-2xl">🎟️</span>
-                <span>View Tickets ({tickets.length})</span>
+                <span className="text-2xl">🎫</span>
+                <span>{t('lottery.viewTickets')} ({tickets.length})</span>
               </button>
 
               <button
@@ -256,8 +258,8 @@ const Lottery = () => {
                 onClick={() => navigate("/dashboard/ticket-summary")}
                 aria-label="View Ticket Summary"
               >
-                <span className="text-2xl">🎟️</span>
-                <span>View Tickets ({tickets.length})</span>
+                <span className="text-2xl">🎫</span>
+                <span>{t('lottery.viewTickets')} ({tickets.length})</span>
               </button>
             </>
           )}

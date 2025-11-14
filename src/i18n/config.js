@@ -44,22 +44,6 @@ const resources = {
       "msg.success": "Success",
       "msg.error": "Error",
       "msg.loading": "Loading...",
-      
-      // Home Page
-      "home.hero.title": "Build your money future",
-      "home.hero.subtitle": "Pick your lucky numbers, join global draws, and win securely — simple flows and transparent payouts.",
-      "home.hero.getStarted": "Get started Now",
-      "home.nextDraw.title": "Next Draw",
-      "home.nextDraw.subtitle": "Don't miss your chance to win big!",
-      "home.nextDraw.playNow": "Play Now",
-      "home.contact.title": "Ready to Win Big?",
-      "home.contact.subtitle": "Join thousands of winners worldwide. Get started today or reach out to our support team.",
-      "home.contact.getInTouch": "Get in Touch",
-      "home.contact.followUs": "Follow Us",
-      "home.contact.followSubtitle": "Stay updated with the latest draws and winners",
-      "home.contact.startPlaying": "Start Playing",
-      "home.contact.startPlayingDesc": "Join millions of players worldwide and start your winning journey today.",
-      "home.contact.getStarted": "Get Started",
     }
   },
   es: {
@@ -103,22 +87,6 @@ const resources = {
       "msg.success": "Éxito",
       "msg.error": "Error",
       "msg.loading": "Cargando...",
-      
-      // Home Page
-      "home.hero.title": "Construye tu futuro financiero",
-      "home.hero.subtitle": "Elige tus números de la suerte, únete a sorteos globales y gana de forma segura — flujos simples y pagos transparentes.",
-      "home.hero.getStarted": "Comienza Ahora",
-      "home.nextDraw.title": "Próximo Sorteo",
-      "home.nextDraw.subtitle": "¡No pierdas tu oportunidad de ganar en grande!",
-      "home.nextDraw.playNow": "Jugar Ahora",
-      "home.contact.title": "¿Listo para Ganar en Grande?",
-      "home.contact.subtitle": "Únete a miles de ganadores en todo el mundo. Comienza hoy o contacta a nuestro equipo de soporte.",
-      "home.contact.getInTouch": "Ponte en Contacto",
-      "home.contact.followUs": "Síguenos",
-      "home.contact.followSubtitle": "Mantente actualizado con los últimos sorteos y ganadores",
-      "home.contact.startPlaying": "Comienza a Jugar",
-      "home.contact.startPlayingDesc": "Únete a millones de jugadores en todo el mundo y comienza tu viaje ganador hoy.",
-      "home.contact.getStarted": "Comenzar",
     }
   },
   fr: {
@@ -162,22 +130,6 @@ const resources = {
       "msg.success": "Succès",
       "msg.error": "Erreur",
       "msg.loading": "Chargement...",
-      
-      // Home Page
-      "home.hero.title": "Construisez votre avenir financier",
-      "home.hero.subtitle": "Choisissez vos numéros chanceux, participez aux tirages mondiaux et gagnez en toute sécurité — processus simples et paiements transparents.",
-      "home.hero.getStarted": "Commencer Maintenant",
-      "home.nextDraw.title": "Prochain Tirage",
-      "home.nextDraw.subtitle": "Ne manquez pas votre chance de gagner gros!",
-      "home.nextDraw.playNow": "Jouer Maintenant",
-      "home.contact.title": "Prêt à Gagner Gros?",
-      "home.contact.subtitle": "Rejoignez des milliers de gagnants dans le monde entier. Commencez aujourd'hui ou contactez notre équipe de support.",
-      "home.contact.getInTouch": "Contactez-nous",
-      "home.contact.followUs": "Suivez-nous",
-      "home.contact.followSubtitle": "Restez informé des derniers tirages et gagnants",
-      "home.contact.startPlaying": "Commencer à Jouer",
-      "home.contact.startPlayingDesc": "Rejoignez des millions de joueurs dans le monde et commencez votre voyage gagnant aujourd'hui.",
-      "home.contact.getStarted": "Commencer",
     }
   }
 };

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { CRYPTO_PROVIDERS } from './cryptoProviders';
 import { FaCopy, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
 import { FiRefreshCw } from 'react-icons/fi';
@@ -7,6 +8,7 @@ const PaymentQRSection = ({
     selected, totalAmount, qrUrl, qrData, copied, copyToClipboard,
     tkid, setTkid, tkidValid, isSubmitting, validateAndSubmit, error, resetFlow
 }) => {
+    const { t } = useTranslation();
     return (
         <motion.div
             key="qr"
@@ -21,7 +23,7 @@ const PaymentQRSection = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
             >
-                Complete Your Payment
+                {t('payment.completePayment')}
             </motion.h2>
             <div className="flex flex-col items-center w-full">
                 <motion.div
@@ -43,13 +45,13 @@ const PaymentQRSection = ({
                         transition={{ delay: 0.5 }}
                     />
                     <div className="text-center">
-                        <p className="text-white/80 text-sm mb-2">Scan QR code with your wallet</p>
+                        <p className="text-white/80 text-sm mb-2">{t('payment.scanWithWallet')}</p>
                         <button
                             onClick={() => copyToClipboard(qrData)}
                             className="flex items-center gap-2 mx-auto px-3 py-1 bg-white/20 rounded-lg text-white text-sm hover:bg-white/30 transition-colors"
                         >
                             {copied ? <FaCheck className="text-green-400" /> : <FaCopy />}
-                            {copied ? 'Copied!' : 'Copy Address'}
+                            {copied ? t('payment.copied') : t('payment.copyAddress')}
                         </button>
                     </div>
                 </motion.div>
@@ -69,17 +71,17 @@ const PaymentQRSection = ({
                         <div className="flex items-start gap-2">
                             <span className="text-yellow-400 text-lg flex-shrink-0 mt-0.5">💡</span>
                             <div>
-                                <p className="text-yellow-200 text-sm font-semibold mb-1">Instrucción Importante</p>
+                                <p className="text-yellow-200 text-sm font-semibold mb-1">{t('payment.instruction.title')}</p>
                                 <p className="text-yellow-100/90 text-xs">
-                                    Después de completar el pago en tu billetera, copia el ID de transacción (TXID) y pégalo en el campo de abajo.
-                                    ¡Recuerda que estamos probando la interfaz así que puedes agregar cualquier número que quieras para pasar al siguiente paso!
+                                    {t('payment.instruction.desc')}
+                                    {t('payment.instruction.test')}
                                 </p>
                             </div>
                         </div>
                     </motion.div>
 
                     <label className="block text-white font-semibold mb-2">
-                        Transaction ID (TXID)
+                        {t('payment.transactionId')}
                     </label>
                     <div className="relative">
                         <input
@@ -87,7 +89,7 @@ const PaymentQRSection = ({
                                 tkidValid === true ? 'border-green-400 focus:ring-green-500/50' :
                                     'border-white/30 focus:ring-blue-500/50'
                                 }`}
-                            placeholder="Enter your transaction ID"
+                            placeholder={t('payment.enterTransactionId')}
                             value={tkid}
                             onChange={e => setTkid(e.target.value)}
                             disabled={isSubmitting}
@@ -101,7 +103,7 @@ const PaymentQRSection = ({
                     </div>
                     {tkidValid === false && (
                         <p className="text-red-400 text-sm mt-2">
-                            Transaction ID must be at least 6 characters and contain only letters and numbers
+                            {t('payment.txidValidation')}
                         </p>
                     )}
                 </motion.div>

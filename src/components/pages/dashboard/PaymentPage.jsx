@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Stepper from "../../common/Stepper";
 import ActionButton from '../../common/ActionButtons'
 import PaymentMethodSelector from "../../features/Payment/PaymentMethodSelector";
@@ -9,6 +10,7 @@ import usePayment from "../../hooks/usePayment";
 import { FiRefreshCw } from "react-icons/fi";
 
 function NavigationButtons({ isSubmitting, navigate }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       className="flex gap-4 justify-center"
@@ -23,7 +25,7 @@ function NavigationButtons({ isSubmitting, navigate }) {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        Go Back
+        {t('payment.goBack')}
       </ActionButton>
     </motion.div>
   );
@@ -31,6 +33,7 @@ function NavigationButtons({ isSubmitting, navigate }) {
 
 // --- MAIN PAGE ---
 const PaymentPage = () => {
+  const { t } = useTranslation();
   const {
     selected,
     setSelected,
@@ -87,8 +90,8 @@ const PaymentPage = () => {
                 </button>
                 <div className="flex items-center gap-3">
                   <div>
-                    <h3 className="text-white font-bold text-lg">💳 Selecciona Tu Método de Pago</h3>
-                    <p className="text-white/90 text-sm">Elige entre cualquier provedor de cryptocurrency para completar tu compra (esto es una simulacion estamos probando la interfaz) puedes hacer click en cualquier recuadro que aparece abajo </p>
+                    <h3 className="text-white font-bold text-lg">{t('payment.guide.step1.title')}</h3>
+                    <p className="text-white/90 text-sm">{t('payment.guide.step1.desc')}</p>
                   </div>
                 </div>
               </div>
@@ -113,8 +116,8 @@ const PaymentPage = () => {
                 <div className="flex items-center gap-3">
 
                   <div>
-                    <h3 className="text-white font-bold text-lg">📱 Escanea y Paga</h3>
-                    <p className="text-white/90 text-sm">Escanea el código QR, completa el pago e ingresa tu ID de transacción</p>
+                    <h3 className="text-white font-bold text-lg">{t('payment.guide.step2.title')}</h3>
+                    <p className="text-white/90 text-sm">{t('payment.guide.step2.desc')}</p>
                   </div>
                 </div>
               </div>
