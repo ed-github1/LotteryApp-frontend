@@ -29,17 +29,20 @@ import { SocketProvider } from './context/SocketContext';
 import WaitingApprovalPage from './components/pages/payment/WaitingApprovalPage';
 import AdminOrdersPage from './components/pages/dashboard/AdminOrdersPage';
 import Winners from './components/features/admin/Winners';
+import UsersAdmin from './components/features/admin/UsersAdmin';
 import { AdminTriggerSuperball } from './components/pages/superball/AdminTriggerSuperball';
 import { AdminPostSuperballWinners } from './components/pages/superball/AdminPostSuperballWinners';
 import { ToastProvider } from './context/ToastContext';
+import { LanguageProvider } from './context/LanguageContext';
 import SuperBallActivePopup from './components/common/SuperBallActivePopup';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <ToastProvider>
-          <UserProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <UserProvider>
             <DrawProvider>
               <TicketProvider>
                 <OrdersProvider>
@@ -73,6 +76,7 @@ function App() {
                           <Route path="admin/upload-winner-number" element={<WinnerNumberUploadPage />} />
                           <Route path="pending-orders" element={<PendingOrdersAdmin />} />
                           <Route path="admin/winners" element={<Winners />} />
+                          <Route path="admin/users" element={<UsersAdmin />} />
 
                           {/* Payment */}
                           <Route path="payment" element={<PaymentPage />} />
@@ -85,9 +89,10 @@ function App() {
               </OrdersProvider>
             </TicketProvider>
           </DrawProvider>
-        </UserProvider>
-      </ToastProvider>
-    </AuthProvider>
+            </UserProvider>
+          </ToastProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </Router>
   );
 }

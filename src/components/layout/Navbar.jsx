@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { IoGrid } from 'react-icons/io5'
 import { useState } from 'react'
 import { FiMenu, FiX } from 'react-icons/fi'
+import LanguageSelector from '../common/LanguageSelector'
 
 const Links = ({ to, className, text, onClick }) => (
   <Link
@@ -49,6 +50,9 @@ function Navbar() {
 
         {/* Right: login & CTA */}
         <div className="hidden md:flex items-center gap-2">
+          <div className="mr-2">
+            <LanguageSelector />
+          </div>
           <Link to="/login" className="text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/60 transition">Login</Link>
           <Link to="/register" className="ml-2 px-5 py-2 rounded-full bg-amber-400 hover:bg-orange-600 text-white font-bold shadow transition">Sign Up</Link>
         </div>
@@ -80,6 +84,9 @@ function Navbar() {
               onClick={() => setMenuOpen(false)}
             />
           ))}
+          <div className="w-full mt-4 mb-2">
+            <LanguageSelector />
+          </div>
           <Link to="/login" className="w-full text-neutral-700 font-semibold text-lg px-4 py-3 rounded-xl hover:bg-orange-50 text-center mt-2" onClick={() => setMenuOpen(false)}>Login</Link>
           <Link to="/register" className="w-full mt-2 px-5 py-3 rounded-ful text-neutral-700 font-bold shadow text-center transition" onClick={() => setMenuOpen(false)}>Sign Up</Link>
         </div>

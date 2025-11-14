@@ -1,11 +1,13 @@
 import { BiHistory, BiLogOut, BiCrown, BiUpload } from 'react-icons/bi'
 import { HiTicket, HiUser, HiChevronLeft } from 'react-icons/hi'
 import { HiMiniTrophy, HiMiniSparkles, HiMiniBolt } from 'react-icons/hi2'
+import { FaUsers } from 'react-icons/fa'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import NotificationBell from './NotificationBell';
+import NotificationBell from './NotificationBell'
+import LanguageSelector from '../common/LanguageSelector';
 
 // Navigation Options Component with Clean Theme
 const getNavOptions = (isAdmin) => {
@@ -40,6 +42,12 @@ const getNavOptions = (isAdmin) => {
       label: 'Orders',
       to: '/dashboard/admin/orders',
       description: 'Management panel'
+    },
+    isAdmin && {
+      icon: FaUsers,
+      label: 'Users',
+      to: '/dashboard/admin/users',
+      description: 'Manage users'
     },
     isAdmin && {
       icon: BiUpload,
@@ -243,6 +251,13 @@ const SecuritySection = ({ collapsed }) => {
       className={`border-t border-white/10 overflow-hidden ${collapsed ? 'px-2 pb-4 pt-4' : 'px-4 pb-6 pt-4'
         }`}
     >
+      {/* Language Selector */}
+      {!collapsed && (
+        <div className="mb-3">
+          <LanguageSelector />
+        </div>
+      )}
+      
       {/* Clean Logout Button */}
       <motion.button
         whileHover={{ scale: 1.01 }}

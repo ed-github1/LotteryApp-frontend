@@ -7,8 +7,9 @@ import DrawCountdown from '../common/DrawCountdown'
 import mobilePhoneImg from '../../assets/banners/mobilephone.png'
 import heroBg from '../../assets/banners/hero.jpg'
 import { Link } from 'react-router-dom'
-
+import { useTranslation } from 'react-i18next'
 const Home = () => {
+  const { t } = useTranslation()
   return (
     <div className='bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'>
       <div className="min-h-[72vh] flex flex-col text-white overflow-hidden ">
@@ -25,10 +26,10 @@ const Home = () => {
         >
           <div className="flex flex-col-reverse md:flex-col items-center justify-center gap-5 mt-5 lg:flex-row lg:gap-12">
             <div className="space-y-4 sm:space-y-6 md:space-y-8 text-center lg:text-left flex-1">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight text-white max-w-2xl">Build your money future</h1>
-              <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto lg:mx-0">Pick your lucky numbers, join global draws, and win securely — simple flows and transparent payouts.</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight text-white max-w-2xl">{t('home.hero.title')}</h1>
+              <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto lg:mx-0">{t('home.hero.subtitle')}</p>
               <Link to="/register" className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC300] text-[#232946] font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-                Get started Now
+               {t('home.hero.getStarted')}
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -48,8 +49,8 @@ const Home = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="bg-white/8 backdrop-blur-lg border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl">
             <div className="text-center mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">Next Draw</h2>
-              <p className="text-sm sm:text-base text-white/70">Don't miss your chance to win big!</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">{t('home.nextDraw.title')}</h2>
+              <p className="text-sm sm:text-base text-white/70">{t('home.nextDraw.subtitle')}</p>
             </div>
 
             {/* Self-contained DrawCountdown component */}
@@ -60,7 +61,7 @@ const Home = () => {
                 to="/register"
                 className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC300] text-[#232946] font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-sm sm:text-base"
               >
-                Play Now
+                {t('home.nextDraw.playNow')}
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -88,10 +89,10 @@ const Home = () => {
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Ready to Win Big?
+              {t('home.contact.title')}
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of winners worldwide. Get started today or reach out to our support team.
+              {t('home.contact.subtitle')}
             </p>
           </div>
 
@@ -104,7 +105,7 @@ const Home = () => {
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-[#FFD700] to-[#FFC300] flex items-center justify-center mb-4 sm:mb-6">
                   <BsTelephone className="text-lg sm:text-xl text-[#232946]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Get in Touch</h3>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t('home.contact.getInTouch')}</h3>
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-center gap-2 sm:gap-3 text-white/80 hover:text-white transition-colors text-sm sm:text-base">
                     <BsTelephone className="text-xs sm:text-sm flex-shrink-0" />
@@ -125,8 +126,8 @@ const Home = () => {
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-[#FFD700] to-[#FFC300] flex items-center justify-center mb-4 sm:mb-6">
                   <BsInstagram className="text-lg sm:text-xl text-[#232946]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Follow Us</h3>
-                <p className="text-white/70 mb-4 sm:mb-6 text-xs sm:text-sm">Stay updated with the latest draws and winners</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t('home.contact.followUs')}</h3>
+                <p className="text-white/70 mb-4 sm:mb-6 text-xs sm:text-sm">{t('home.contact.followSubtitle')}</p>
                 <div className="flex gap-3 sm:gap-4">
                   <a href="https://instagram.com" aria-label="Instagram" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#FFC300] hover:text-[#232946] transition-all duration-300">
                     <BsInstagram className="text-sm sm:text-lg" />
@@ -150,10 +151,10 @@ const Home = () => {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Start Playing</h3>
-                <p className="text-white/70 mb-4 sm:mb-6 text-xs sm:text-sm flex-1">Join millions of players worldwide and start your winning journey today.</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t('home.contact.startPlaying')}</h3>
+                <p className="text-white/70 mb-4 sm:mb-6 text-xs sm:text-sm flex-1">{t('home.contact.startPlayingDesc')}</p>
                 <Link to="/register" className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC300] text-[#232946] font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-sm sm:text-base">
-                  Get Started
+                  {t('home.contact.getStarted')}
                   <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>

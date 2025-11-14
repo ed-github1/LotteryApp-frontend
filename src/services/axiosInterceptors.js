@@ -4,16 +4,30 @@ import axios from 'axios'
 export const setupAxiosInterceptors = (logout, checkTokenExpiration) => {
   axios.interceptors.request.use(
     (config) => {
-      const storedUser = localStorage.getItem('loggedLotteryappUser');
-      if (storedUser) {
-        try {
-          const userData = JSON.parse(storedUser);
-          if (userData.token) {
-            config.headers.Authorization = `Bearer ${userData.token}`;
+      // First try to get token from loggedLotteryappToken (primary storage)
+      let token = localStorage.getItem('loggedLotteryappToken');
+      
+      // If not found, try getting from loggedLotteryappUser.token (backup)
+      if (!token) {
+        const storedUser = localStorage.getItem('loggedLotteryappUser');
+        if (storedUser) {
+          try {
+            const userData = JSON.parse(storedUser);
+            if (userData.token) {
+              token = userData.token;
+            }
+          } catch (error) {
+            console.error('Error parsing stored user data:', error);
           }
-        } catch (error) {
-          console.error('Error parsing stored user data:', error);
         }
+      }
+      
+      // Set authorization header if token exists
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('[AXIOS INTERCEPTOR] Token attached to request');
+      } else {
+        console.warn('[AXIOS INTERCEPTOR] No token found for request');
       }
 
       // Diagnostic logging for debugging API call blocking
